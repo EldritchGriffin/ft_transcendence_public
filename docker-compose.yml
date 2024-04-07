@@ -1,0 +1,57 @@
+services:
+  frontend:
+    build:
+      context: frontend
+      dockerfile: ./Dockerfile
+    networks:
+      - front_network
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/app/src:rw
+      - ./frontend/public:/app/public:rw
+      - vol_frontend:/opt/app/node_modules
+  backend:
+    build:
+      context: backend
+      dockerfile: ./Dockerfile
+    networks:
+      # - backend_network
+      - front_network
+    ports:
+      - 3001:3001
+      - 5555:5555
+    volumes:
+      - ./backend/src:/app/src:rw
+      - ./backend/prisma:/app/prisma:rw
+      - ./backend/prisma/schema.prisma:/app/prisma/schema.prisma:ro
+      - ./backend/prisma/migrations:/app/prisma/migrations:rw
+      - vol_backend:/opt/app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:13
+    # ports:
+    #   - 5432:5432
+    networks:
+      # - backend_network
+      - front_network
+    volumes:
+      - vol_db:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+networks:
+  backend_network:
+  front_network:
+volumes:
+  vol_backend:
+  vol_frontend:
+  vol_db:

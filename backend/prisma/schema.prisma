@@ -1,0 +1,87 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id    String @id @default(uuid())
+    score Int    @default(0)
+    // lastSeen DateTime 
+
+    intraLogin        String     @unique
+    nickname          String?    @unique
+    TFA               Boolean    @default(false) //2FA
+    status            String     @default("offline")
+    matchHistory      Games[]
+    joinedChannels    Channels[]
+    monitoredChannels Channels[] @relation("admin")
+    friends           User[]     @relation("Friends")
+    friendsOf         User[]     @relation("Friends")
+    blocked           User[]     @relation("BlockedUsers")
+    blockedOf         User[]     @relation("BlockedUsers")
+    requesting        User[]     @relation("requests")
+    requested         User[]     @relation("requests")
+    messages          Message[]
+    avatarLink        String?
+    twoFaSecret       String?
+}
+
+model Channels {
+    id          Int         @id @default(autoincrement())
+    createdAt   DateTime    @default(now())
+    title       String // in case of dms concatinate the name of the sender and the receiver
+    description String?
+    members     User[]
+    ownerLogin  String?
+    admins      User[]      @relation("admin")
+    bannedUsers String[] //logins of banned users
+    password    String?
+    messages    Message[]
+    type        channelType
+    access      accessType  @default(Private)
+}
+
+model Games {
+    gameId     String   @id()
+    players    User[]
+    player1    String?
+    player2    String?
+    result     Int // >0 if p1 won, <0 if p2 won
+    startedAt  DateTime @default(now())
+    finishedAt DateTime
+}
+
+model Message {
+    id          Int      @id @default(autoincrement())
+    content     String
+    channelId   Int
+    senderLogin String
+    sender      User     @relation(fields: [senderLogin], references: [intraLogin])
+    destination Channels @relation(fields: [channelId], references: [id])
+}
+
+// model Message{
+// 	sender User
+
+//  convo conversation @relation many > 1
+// }
+//
+
+//model conversation {
+// 
+// message[] 1  > many
+//}
+enum channelType {
+    DM
+    Channel
+}
+
+enum accessType {
+    Private
+    Protected
+    Public
+}
