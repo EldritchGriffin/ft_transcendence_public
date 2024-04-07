@@ -31,7 +31,7 @@ export class MessageService {
         },
       }))
     )
-      return new ForbiddenException('user not member of this channel');
+      throw new ForbiddenException('user not member of this channel');
     var messages = await this.prisma.message.findMany({
       where: {
         channelId: channel,
