@@ -34,6 +34,6 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 makefile
-.env
+#.env
 ./frontend/*
 ./frontend
