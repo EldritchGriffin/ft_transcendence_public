@@ -1,6 +1,6 @@
 # ft_transcendence_public
 I have added a base .env at your disposal, you just have to get your API credentials for [Cloudinary](https://cloudinary.com/) and [intra](intra.42.fr)
-for the intra API click on your login then settings, and on your left click on API and then register new APP, after that, fill in any name however in the Redirect URI field, you need two links split by a newline, `http://hostname:3000/twoFactorAuth` and `http://hostname:3001/auth/signin`, in case you decided to test the app on the same machine, hostname is `localhost` and make sure it is localhost in `/frontend/.env.local` also otherwise it will be the IP of the machine and dont forget to update `/frontend/.env.local` accordingly,
+for the intra API click on your login then settings, and on your left click on API and then register new APP, after that, fill in any name however in the Redirect URI field, you need two links split by a newline, `http://hostname:3000/twoFactorAuth` and `http://hostname:3001/auth/signin`, in case you decided to test the app on the same machine, hostname is `localhost` and make sure it is localhost in `/frontend/.env.local` also, otherwise it will be the IP of the machine and dont forget to update `/frontend/.env.local` accordingly,
 **NOTE**
   the hostname in the intra's redirect URI should be exactly the same in the `FT_CALLBACK` and `FT_CALLBACK2`, and dont forget `/frontend/.env.local`.
 
