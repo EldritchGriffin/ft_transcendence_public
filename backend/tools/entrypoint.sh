@@ -30,5 +30,5 @@ expect <<EOF
   }
 EOF
 
-npm run build
-exec npm run start
+# npm run build
+exec npm run start:dev
